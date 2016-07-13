@@ -16,10 +16,10 @@
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials 
  
 # SQL statement
-$sql = "select MuffinName, MuffinID, Price from test_Muffins";
+$sql = "select * from sm16_iceCream";
 
 #Fills <title> tag. If left empty will default to $PageTitle in config_inc.php  
-$config->titleTag = 'Muffins made with love & PHP in Seattle';
+$config->titleTag = 'Ice cream made with love & PHP in Seattle';
 
 #Fills <meta> tags.  Currently we're adding to the existing meta tags in config_inc.php
 $config->metaDescription = 'Seattle Central\'s ITC280 Class Muffins are made with pure PHP! ' . $config->metaDescription;
@@ -42,12 +42,12 @@ $config->nav1 = array("page.php"=>"New Page!") + $config->nav1; #add a new page 
 
 get_header(); #defaults to theme header or header_inc.php
 ?>
-<h3 align="center"><?=smartTitle();?></h3>
+<h3 align="center">Ice cream</h3>
 
-<p>This page, along with <b>demo_view_pager.php</b>, demonstrate a List/View web application.</p>
+<p>This page, along with <b>ice-cream-view.php</b>, demonstrate a List/View web application.</p>
 <p>It was built on the mysql shared web application page, <b>demo_shared.php</b></p>
-<p>This page is the entry point of the application, meaning this page gets a link on your web site.  Since the current subject is muffins, we could name the link something clever like <a href="<?php echo VIRTUAL_PATH; ?>demo_list_pager.php">Muffins</a></p>
-<p>Use <b>demo_list_pager.php</b> and <b>demo_view_pager.php</b> as a starting point for building your own List/View web application!</p> 
+<p>This page is the entry point of the application, meaning this page gets a link on your web site.  Since the current subject is muffins, we could name the link something clever like <a href="<?php echo VIRTUAL_PATH; ?>ice-cream-list.php">Muffins</a></p>
+<p>Use <b>ice-cream-list.php</b> and <b>ice-cream-view.php</b> as a starting point for building your own List/View web application!</p> 
 <?php
 #reference images for pager
 $prev = '<img src="' . VIRTUAL_PATH . 'images/arrow_prev.gif" border="0" />';
@@ -62,16 +62,16 @@ $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::
 
 if(mysqli_num_rows($result) > 0)
 {#records exist - process
-	if($myPager->showTotal()==1){$itemz = "muffin";}else{$itemz = "muffins";}  //deal with plural
+	if($myPager->showTotal()==1){$itemz = "ice cream";}else{$itemz = "ice cream";}  //deal with plural
     echo '<div align="center">We have ' . $myPager->showTotal() . ' ' . $itemz . '!</div>';
 	while($row = mysqli_fetch_assoc($result))
 	{# process each row
-         echo '<div align="center"><a href="' . VIRTUAL_PATH . 'demo/demo_view_pager.php?id=' . (int)$row['MuffinID'] . '">' . dbOut($row['MuffinName']) . '</a>';
-         echo ' <i>only</i> <font color="red">$' . number_format((float)$row['Price'],2)  . '</font></div>';
+         echo '<div align="center"><a href="' . VIRTUAL_PATH . 'demo/ice-cream-view.php?id=' . (int)$row['IceCreamID'] . '">' . dbOut($row['Flavor']) . '</a>';
+         echo ' <i>only</i> <font color="red">' . number_format((int)$row['Calories'])  . '</font> calories!</div>';
 	}
 	echo $myPager->showNAV(); # show paging nav, only if enough records	 
 }else{#no records
-    echo "<div align=center>What! No muffins?  There must be a mistake!!</div>";	
+    echo "<div align=center>What! No ice cream?  There must be a mistake!!</div>";	
 }
 @mysqli_free_result($result);
 

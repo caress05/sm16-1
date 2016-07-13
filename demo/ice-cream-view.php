@@ -15,15 +15,15 @@
 # '../' works for a sub-folder.  use './' for the root  
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
  
-# check variable of item passed in - if invalid data, forcibly redirect back to demo_list_pager.php page
+# check variable of item passed in - if invalid data, forcibly redirect back to ice-cream-list.php page
 if(isset($_GET['id']) && (int)$_GET['id'] > 0){#proper data must be on querystring
 	 $myID = (int)$_GET['id']; #Convert to integer, will equate to zero if fails
 }else{
-	myRedirect(VIRTUAL_PATH . "demo/demo_list_pager.php");
+	myRedirect(VIRTUAL_PATH . "demo/ice-cream-list.php");
 }
 
 //sql statement to select individual item
-$sql = "select MuffinName,Description,MetaDescription,MetaKeywords,Price from test_Muffins where MuffinID = " . $myID;
+$sql = "select * from sm16_iceCream where IceCreamID = " . $myID;
 //---end config area --------------------------------------------------
 
 $foundRecord = FALSE; # Will change to true, if record found!
@@ -36,23 +36,23 @@ if(mysqli_num_rows($result) > 0)
 	   $foundRecord = TRUE;	
 	   while ($row = mysqli_fetch_assoc($result))
 	   {
+           $Flavor = dbOut($row['Flavor']);
+           $Brand = dbOut($row['Brand']);
+           $Description = dbOut($row['Description']);
+           $Calories = dbOut($row['Calories']);
+           /*
 			$MuffinName = dbOut($row['MuffinName']);
 			$Description = dbOut($row['Description']);
 			$Price = (float)$row['Price'];
 			$MetaDescription = dbOut($row['MetaDescription']);
 			$MetaKeywords = dbOut($row['MetaKeywords']);
+            */
 	   }
 }
 
 @mysqli_free_result($result); # We're done with the data!
 
-if($foundRecord)
-{#only load data if record found
-	$config->titleTag = $MuffinName . " muffins made with PHP & love!"; #overwrite PageTitle with Muffin info!
-	#Fills <meta> tags.  Currently we're adding to the existing meta tags in config_inc.php
-	$config->metaDescription = $MetaDescription . ' Seattle Central\'s ITC280 Class Muffins are made with pure PHP! ' . $config->metaDescription;
-	$config->metaKeywords = $MetaKeywords . ',Muffins,PHP,Fun,Bran,Regular,Regular Expressions,'. $config->metaKeywords;
-}
+
 /*
 $config->metaDescription = 'Web Database ITC281 class website.'; #Fills <meta> tags.
 $config->metaKeywords = 'SCCC,Seattle Central,ITC281,database,mysql,php';
@@ -71,20 +71,20 @@ get_header(); #defaults to theme header or header_inc.php
 ?>
 <h3 align="center"><?=smartTitle();?></h3>
 
-<p>This page, along with <b>demo_list_pager.php</b>, demonstrate a List/View web application.</p>
+<p>This page, along with <b>ice-cream-list.php</b>, demonstrate a List/View web application.</p>
 <p>It was built on the mysqli shared web application page, <b>demo_shared.php</b></p>
-<p>This page is to be used only with <b>demo_list_pager.php</b>, and is <b>NOT</b> the entry point of the application, meaning this page gets <b>NO</b> link on your web site.</p>
-<p>Use <b>demo_list_pager.php</b> and <b>demo_view_pager.php</b> as a starting point for building your own List/View web application!</p> 
+<p>This page is to be used only with <b>ice-cream-list.php</b>, and is <b>NOT</b> the entry point of the application, meaning this page gets <b>NO</b> link on your web site.</p>
+<p>Use <b>ice-cream-list.php</b> and <b>ice-cream-view.php</b> as a starting point for building your own List/View web application!</p> 
 <?php
 if($foundRecord)
 {#records exist - show muffin!
 ?>
-	<h3 align="center">A Yummy <?=$MuffinName;?> Muffin!</h3>
-	<div align="center"><a href="<?=VIRTUAL_PATH;?>demo/demo_list_pager.php">More Muffins?!?</a></div>
+	<h3 align="center"><?=$Flavor;?> Ice Cream!</h3>
+	<div align="center"><a href="<?=VIRTUAL_PATH;?>demo/ice-cream-list.php">More Ice Cream?!?</a></div>
 	<table align="center">
 		<tr>
 			<td><img src="<?=VIRTUAL_PATH;?>upload/m<?=$myID;?>.jpg" /></td>
-			<td>We make fresh <?=$MuffinName;?> muffins daily!</td>
+			<td>Made by <?=$Brand;?>!</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -93,14 +93,14 @@ if($foundRecord)
 		</tr>
 		<tr>
 			<td align="center" colspan="2">
-				<h3><i>ONLY!!:</i> <font color="red">$<?=number_format($Price,2);?></font></h3>
+				<h3><i>ONLY!!:</i> <font color="red">$<?=number_format($Calorie);?> Calories</font></h3>
 			</td>
 		</tr>
 	</table>
 <?
 }else{//no such muffin!
     echo '<div align="center">What! No such muffin? There must be a mistake!!</div>';
-    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'demo/demo_list_pager.php">Another Muffin?</a></div>';
+    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'demo/ice-cream-list.php">Another Muffin?</a></div>';
 }
 
 get_footer(); #defaults to theme footer or footer_inc.php
